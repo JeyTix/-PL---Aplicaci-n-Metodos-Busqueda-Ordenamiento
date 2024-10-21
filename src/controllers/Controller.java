@@ -19,7 +19,7 @@ public class Controller {
     public void start(){
         int option= 0;
         do {
-            option= View.showMenu();
+            option= view.showMenu();
             switch (option) {
                 case 1:
                     inputPersons();
@@ -30,7 +30,7 @@ public class Controller {
                     break;
 
                 case 3:
-
+                    sortPersons();
                     break;
 
                 case 100:
@@ -53,16 +53,31 @@ public class Controller {
     }
 
     public void addPersons(){
-        int numeroPersonas= view.inputInt("Ingrese el numero de personar a adicionar: ");
-        Persona[] personasTotales= new Persona[personas.length+  numeroPersonas];
-        for (int i = 0; i < personasTotales.length; i++) {
-            personasTotales[i]= personas[i];
+        if(personas== null){
+            inputPersons();
+        } else{
+            int numeroPersonas= view.inputInt("Ingrese el numero de personar a adicionar: ");
+            Persona[] personasTotales= new Persona[personas.length+  numeroPersonas];
+            for (int i = 0; i < personasTotales.length; i++) {
+                personasTotales[i]= personas[i];
+            }
+            for (int i = personas.length; i < personasTotales.length; i++) {
+                personas[i]= view.inputPersons();
+            }
+
+            personas= personasTotales;
         }
-        
     }
 
     public void sortPersons(){
-
+        int sortingOption= view.selectSortingMethods();
+        if (sortingOption== 1) {
+            sortingMethods.sortByNameBubble(personas);
+        } else if (sortingOption== 2) {
+            sortingMethods.sortByAgeSelection(personas);
+        } else {
+            view.showMessage("Opcion validad");        
+        }
     }
     
     public void searchPersons(){
