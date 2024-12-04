@@ -16,6 +16,7 @@ public class App {
         Controller controller= new Controller(vista, sT, sM);
 
         //Iniciar aplicacion
+        controller.start();
         
 
     }
