@@ -1,11 +1,14 @@
 package controllers;
+
 import models.Persona;
 import views.View;
+
 public class Controller {
     private View view;
     private SortingMethods sortingMethods;
     private SearchMethods searchMethods;
     private Persona[] personas;
+
     public Controller(View view, SortingMethods sortingMethods, SearchMethods searchMethods) {
         this.view = view;
         this.searchMethods = searchMethods;
@@ -13,6 +16,7 @@ public class Controller {
         this.personas = new Persona[0];
         System.out.println("Controller Created");
     }
+
     public void start() {
         int option;
         do {
@@ -22,18 +26,16 @@ public class Controller {
                     inputPersons();
                     break;
                 case 2:
-                    //view.displayPersons(personas);
-                    // view.showPersons(personas);
                     view.displayPersons(personas);
                     break;
                 case 3:
                     sortPersons();
                     break;
                 case 4:
-                    //searchPersonByAge();
+                    searchPersonByAge();
                     break;
                 case 5:
-                    //searchPersonByName();
+                    searchPersonByName();
                     break;
                 case 100:
                     System.out.println("Adiós");
@@ -42,8 +44,9 @@ public class Controller {
                     System.out.println("Opción no válida");
                     break;
             }
-        } while (option != 0); 
+        } while (option != 100);
     }
+
     public void sortPersons() {
         int sortingOption = view.selectSortingMethods();
         if (sortingOption == 1) {
@@ -51,7 +54,7 @@ public class Controller {
         } else if (sortingOption == 2) {
             sortingMethods.sortByNameWithSelection(personas);
         } else if (sortingOption == 3) {
-            sortingMethods.sortByAgeWithBubble(personas); 
+            sortingMethods.sortByAgeWithBubble(personas);
         } else if (sortingOption == 4) {
             sortingMethods.sortByAgeWithSelection(personas);
         } else {
@@ -59,26 +62,32 @@ public class Controller {
         }
         view.displayPersons(personas);
     }
+
     public void inputPersons() {
         int numeroPersonas = view.inputInt("Ingrese el número de personas: ");
-        personas = new Persona[numeroPersonas]; 
+        personas = new Persona[numeroPersonas];
         for (int i = 0; i < numeroPersonas; i++) {
-            personas[i] = view.inputPersons(); 
+            personas[i] = view.inputPersons();
         }
     }
-    public void addPerson() {
-        if(personas == null) {
-            view.showMessage("No existen personas");
-            inputPersons();
+
+    public void searchPersonByAge() {
+        int age = view.inputInt("Ingrese la edad a buscar: ");
+        Persona result = searchMethods.busquedaBinAge(personas, age);
+        if (result != null) {
+            view.showMessage("Persona encontrada: " + result);
+        } else {
+            view.showMessage("Persona no encontrada.");
         }
-        int numeroPersonas = view.inputInt("Ingrese el número de personas a agregar: ");
-        Persona[] personasTotales = new Persona[personas.length + numeroPersonas];
-        for (int i = 0; i < personas.length; i++) {
-            personasTotales[i] = personas[i];
-        } 
-        for (int i = personas.length; i < personasTotales.length; i++) {
-            personasTotales[i] = view.inputPersons();
+    }
+
+    public void searchPersonByName() {
+        String name = view.inputString("Ingrese el nombre a buscar: ");
+        Persona result = searchMethods.busquedaBinName(personas, name);
+        if (result != null) {
+            view.showMessage("Persona encontrada: " + result);
+        } else {
+            view.showMessage("Persona no encontrada.");
         }
-        personas = personasTotales;
     }
 }
